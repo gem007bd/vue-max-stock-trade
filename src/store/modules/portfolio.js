@@ -3,7 +3,7 @@ const state = {
     stocks: []
 };
 
-const mutation = {
+const mutations = {
     'BUY_STOCK'(state, {stockId, quantity, stockPrice}) {
         const record = state.stocks.find(element => element.id === stockId);
         if(record) {
@@ -22,6 +22,7 @@ const mutation = {
         stockPrice
     }) {
         const record = state.stocks.find(element => element.id === stockId);
+        debugger
         if(record.quantity > quantity) {
             record.quantity -= quantity;
         } else {
@@ -32,5 +33,32 @@ const mutation = {
 };
 
 const actions = {
-
+    sellStock({commit}, order) {
+        commit('SELL_STOCK', order);
+    }
 };
+
+
+const getters = {
+    stockPortfolio(state, getters) {
+        return state.stocks.map(stock => { 
+            const record = getters.stocks.find(element => element.id === stock.id);
+            return {
+                id: record.id,
+                quantity: record.quantity,
+                name: record.name,
+                price: record.price
+            }
+        });
+    },
+    funds(state) {
+        return state.funds;
+    }
+};
+
+export default {
+    state, 
+    mutations,
+    actions,
+    getters
+}
