@@ -22,7 +22,6 @@ const mutations = {
         stockPrice
     }) {
         const record = state.stocks.find(element => element.id === stockId);
-        debugger
         if(record.quantity > quantity) {
             record.quantity -= quantity;
         } else {
@@ -44,8 +43,8 @@ const getters = {
         return state.stocks.map(stock => { 
             const record = getters.stocks.find(element => element.id === stock.id);
             return {
-                id: record.id,
-                quantity: record.quantity,
+                id: stock.id,
+                quantity: stock.quantity,
                 name: record.name,
                 price: record.price
             }

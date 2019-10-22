@@ -13,7 +13,7 @@
             <div class="input-group-append">
                 <button class="btn btn-success"
                     type="button" 
-                    @click="buyStock" 
+                    @click="buyOnStock" 
                     :disabled="quantity <=0 || Number.isInteger(quantity)"
                     >Buy</button>
             </div>
@@ -32,11 +32,11 @@ export default {
         }
     },
     methods: {
-        buyStock() {
+        buyOnStock() {
             const order = {
                 stockId: this.stock.id,
                 stockPrice: this.stock.price,
-                quantity: this.quantity
+                quantity: parseInt(this.quantity)
             }; 
             this.quantity = 0;
             console.log(order);
