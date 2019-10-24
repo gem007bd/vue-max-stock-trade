@@ -2,20 +2,21 @@
     <div class="col-sm-4">
         <div class="card border-info">
         <div class="card-header bg-transparent border-info">
-            {{stock.name}} <span class="small">Price: {{stock.price}} | Quantity:  {{stock.quantity}} </span>
+            {{stock.name}} <span class="small">Price: {{stock.price | currency}} | Quantity:  {{stock.quantity}} </span>
         </div>
         <div class="card-body">
             <div class="input-group">
             <input type="number" 
                 class="form-control" 
                 placeholder="Quantity"
-                v-model="sellQuantity">
+                v-model="quantity"
+                :class="{'border border-danger': insufficientQuantity}">
             <div class="input-group-append">
                 <button class="btn btn-info"
                     type="button" 
                     @click="sellStock" 
-                    :disabled="sellQuantity <=0 || Number.isInteger(sellQuantity)"
-                    >Sell</button>
+                    :disabled="insufficientQuantity || sellQuantity <=0 || Number.isInteger(sellQuantity)"
+                    >{{insufficientQuantity ? 'Not enough stock' : 'Sell'}}</button>
             </div>
             </div>
         </div>
@@ -29,7 +30,12 @@ export default {
     props:['stock'],
     data() {
         return {
-            sellQuantity: 0
+            quantity: 0
+        }
+    },
+    computed: {
+        insufficientQuantity() {
+            return this.quantity > this.stock.quantity;
         }
     },
     methods: {

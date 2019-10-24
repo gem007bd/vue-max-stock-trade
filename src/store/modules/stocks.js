@@ -10,7 +10,10 @@ const mutations = {
         state.stocks = stocks;
     },
     'RND_STOCKS' (state) {
-
+        state.stocks.forEach( stock => {
+            // finance algorithm
+            stock.price = Math.round(stock.price * (1 + Math.random() - 0.5));
+        });
     }
 };
 
