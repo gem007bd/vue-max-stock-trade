@@ -14,32 +14,35 @@
     
     <div class="navbar-nav">
       <li  class="nav-item nav-link"><a @click="endDay">End Day</a></li>
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown show">
         <a class="nav-link dropdown-toggle" 
-          href="#" 
-          id="navbarDropdownMenuLink" 
+          id="navbarDropdownMenuLink"
+          @click="isDropdownOpen = !isDropdownOpen"
           role="button" 
           data-toggle="dropdown" 
           aria-haspopup="true" 
-          aria-expanded="false">
+          aria-expanded="true">
           Save & Load
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="#">Save Data</a>
-          <a class="dropdown-item" href="#">Load Data</a>
+        <div class="dropdown-menu" :class="{show: isDropdownOpen}" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" @click="saveData">Save Data</a>
+          <a class="dropdown-item" @click="loadData">Load Data</a>
         </div>
       </li>
       <strong class="navbar-text nav-right">Funds: {{funds | currency}}</strong>
     </div>
   </div>
 </nav> 
-
-
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions } from 'vuex';
 export default {
+  data() {
+    return {
+      isDropdownOpen: false
+    }
+  },
   computed: {
     funds() {
       return this.$store.getters.funds;
@@ -47,10 +50,25 @@ export default {
   },
   methods: {
     ...mapActions([
-      'randomizeStocks'
+      'randomizeStocks',
+      'fetchData'
     ]),
     endDay() {
       this.randomizeStocks();
+    },
+    saveData() {
+      const data = {
+        funds: this.$store.getters.funds,
+        stockPortfolio: this.$store.getters.stockPortfolio,
+        stocks: this.$store.getters.stocks
+      };
+      this.$http.put('https://vuejs-stock-trade-ef200.firebaseio.com/data.json', data)
+        .then(res => {
+          console.log(res.body);
+        })
+    },
+    loadData() {
+      this.fetchData();
     }
   }
 }
